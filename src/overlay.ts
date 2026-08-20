@@ -1,8 +1,15 @@
 import { PDFDocument, PDFPage, PDFFont, PDFImage, rgb, StandardFonts } from 'pdf-lib';
 import { sanitizeWinAnsi } from './sanitize.js';
 
+export type PdfFieldType = 'text' | 'textarea' | 'signature' | 'fillableDate' | 'variable' | 'static';
+
 export interface PdfOverlayField {
   key: string;
+  type?: PdfFieldType;
+  /** Role that owns or fills this field. Used for per-signer filtering and variable resolution. */
+  role?: string;
+  /** For `variable` fields: the variable to resolve (e.g. `client-fullName`). */
+  variable?: string;
   page: number;
   x: number;
   y: number;
@@ -10,6 +17,10 @@ export interface PdfOverlayField {
   height?: number;
   fontSize?: number;
   color?: { r: number; g: number; b: number };
+  /** For `fillableDate` fields. */
+  minDate?: string;
+  maxDate?: string;
+  displayFormat?: string;
 }
 
 export interface SignatureOverlay {
