@@ -10,3 +10,4 @@ export {
 } from './overlay.js';
 export { finalizeSignedPdf } from './finalize.js';
 export { sanitizeWinAnsi } from './sanitize.js';
+export { PDFDocument, StandardFonts, rgb } from 'pdf-lib';
