@@ -89,9 +89,9 @@ consuming application.
 ## Install
 
 ```bash
-npm install signing-pdf
+npm install @clocklobster/signing-pdf
 # or
-pnpm add signing-pdf
+pnpm add @clocklobster/signing-pdf
 ```
 
 ### Dependencies
@@ -117,7 +117,7 @@ import {
   sanitizeWinAnsi,
   PDFDocument,
   StandardFonts,
-} from 'signing-pdf';
+} from '@clocklobster/signing-pdf';
 
 // 1. Load the template PDF
 const pdfBytes = await fs.readFile('agreement-template.pdf');
@@ -362,7 +362,7 @@ For convenience, the package re-exports common `pdf-lib` symbols so you don't ne
 separate import:
 
 ```typescript
-import { PDFDocument, PDFPage, PDFFont, StandardFonts, rgb } from 'signing-pdf';
+import { PDFDocument, PDFPage, PDFFont, StandardFonts, rgb } from '@clocklobster/signing-pdf';
 ```
 
 | Symbol | Source | Use |

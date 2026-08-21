@@ -1,5 +1,8 @@
 {
-  "name": "signing-pdf",
+  "name": "@clocklobster/signing-pdf",
+  "publishConfig": {
+    "access": "public"
+  },
   "version": "1.0.0",
   "description": "Pure pdf-lib primitives for electronic-signature PDF overlay: field values, signature images, certificate pages, and finalization.",
   "license": "MIT",
