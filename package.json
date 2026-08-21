@@ -2,8 +2,27 @@
   "name": "signing-pdf",
   "version": "1.0.0",
   "description": "Pure pdf-lib primitives for electronic-signature PDF overlay: field values, signature images, certificate pages, and finalization.",
-  "private": true,
-  "license": "UNLICENSED",
+  "license": "MIT",
+  "author": "Victor Salmon",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/victorsalmon/signing-pdf.git"
+  },
+  "homepage": "https://github.com/victorsalmon/signing-pdf#readme",
+  "bugs": {
+    "url": "https://github.com/victorsalmon/signing-pdf/issues"
+  },
+  "keywords": [
+    "pdf",
+    "pdf-lib",
+    "electronic-signature",
+    "e-sign",
+    "esign",
+    "signature",
+    "certificate",
+    "overlay",
+    "document"
+  ],
   "type": "module",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -25,6 +44,6 @@
     "vitest": "^3.2.7"
   },
   "engines": {
-    "node": ">=22.0.0"
+    "node": ">=18.0.0"
   }
 }
