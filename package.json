@@ -32,9 +32,9 @@
   "files": [
     "dist"
   ],
+  "packageManager": "pnpm@11.22.0",
   "scripts": {
     "build": "tsc -p tsconfig.build.json",
-    "postinstall": "tsc -p tsconfig.build.json",
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
     "test:property": "vitest run \"test/**/*.property.test.ts\"",
