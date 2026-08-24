@@ -1,12 +1,11 @@
 import { describe, it, expect, vi } from 'vitest';
 import fc from 'fast-check';
-import { PDFDocument } from 'pdf-lib';
+import { PDFDocument, type PDFPage } from 'pdf-lib';
 import {
   embedFieldValues,
   embedSignatureImage,
   embedCertificatePage,
   finalizeSignedPdf,
-  loadPdf,
 } from '../src/index.js';
 
 /**
@@ -21,10 +20,6 @@ import {
  * sanitizer (exercised over full Unicode in sanitize.property.test.ts) does
  * not mask drawing assertions with font-encoding behaviour.
  */
-
-const asciiPrintable = fc
-  .array(fc.integer({ min: 32, max: 126 }).map(String.fromCharCode), { maxLength: 24 })
-  .map((chars) => chars.join(''));
 
 const nonEmptyAscii = fc
   .array(fc.integer({ min: 32, max: 126 }).map(String.fromCharCode), {
@@ -47,7 +42,7 @@ interface DrawCall {
   opts: Record<string, unknown>;
 }
 
-function spyDrawText(page: { drawText: (...a: unknown[]) => unknown }): DrawCall[] {
+function spyDrawText(page: PDFPage): DrawCall[] {
   const calls: DrawCall[] = [];
   page.drawText = vi.fn((text: string, opts: Record<string, unknown>) => {
     calls.push({ text, opts });
@@ -59,7 +54,7 @@ interface ImageCall {
   opts: Record<string, unknown>;
 }
 
-function spyDrawImage(page: { drawImage: (...a: unknown[]) => unknown }): ImageCall[] {
+function spyDrawImage(page: PDFPage): ImageCall[] {
   const calls: ImageCall[] = [];
   page.drawImage = vi.fn((_img: unknown, opts: Record<string, unknown>) => {
     calls.push({ opts });
