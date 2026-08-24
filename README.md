@@ -330,7 +330,7 @@ Sanitizes a string for `pdf-lib`'s standard fonts (Helvetica, Times, Courier), w
 WinAnsi encoding and cannot render most Unicode characters.
 
 ```typescript
-const clean = sanitizeWinAnni('Jane "the client" Doe — Toronto…');
+const clean = sanitizeWinAnsi('Jane "the client" Doe — Toronto…');
 // 'Jane "the client" Doe - Toronto...'
 ```
 
@@ -455,7 +455,7 @@ use **WinAnsi encoding**, which covers the Latin-1 character range (0–255). Ch
 outside this range — including common Unicode like smart quotes, em dashes, and ellipses —
 cause `pdf-lib` to throw `Error: WinAnsi encoding does not support this character`.
 
-`sanitizeWinAnni()` replaces the most common problematic Unicode characters with their
+`sanitizeWinAnsi()` replaces the most common problematic Unicode characters with their
 ASCII equivalents and strips control characters. It is called automatically by
 `embedFieldValues` and `embedCertificatePage`, so you usually don't need to call it
 directly.
