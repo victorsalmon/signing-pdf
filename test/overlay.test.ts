@@ -1,15 +1,6 @@
 import { describe, it, expect } from 'vitest';
-import { PDFDocument } from 'pdf-lib';
 import { embedFieldValues, embedSignatureImage, finalizeSignedPdf, loadPdf } from '../src/index.js';
-
-async function createBlankPdf(): Promise<PDFDocument> {
-  const pdf = await PDFDocument.create();
-  pdf.addPage([612, 792]);
-  return pdf;
-}
-
-const ONE_PIXEL_PNG =
-  'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+ip1sAAAAASUVORK5CYII=';
+import { createBlankPdf, ONE_PIXEL_PNG } from './fixtures.js';
 
 describe('embedFieldValues', () => {
   it('draws provided values onto the PDF', async () => {

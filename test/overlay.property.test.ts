@@ -7,6 +7,7 @@ import {
   embedCertificatePage,
   finalizeSignedPdf,
 } from '../src/index.js';
+import { createBlankPdf, ONE_PIXEL_PNG } from './fixtures.js';
 
 /**
  * Property tests for the PDF overlay primitives.
@@ -27,15 +28,6 @@ const nonEmptyAscii = fc
     maxLength: 24,
   })
   .map((chars) => chars.join(''));
-
-async function createBlankPdf(pages: number): Promise<PDFDocument> {
-  const pdf = await PDFDocument.create();
-  for (let i = 0; i < pages; i++) pdf.addPage([612, 792]);
-  return pdf;
-}
-
-const ONE_PIXEL_PNG =
-  'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+ip1sAAAAASUVORK5CYII=';
 
 interface DrawCall {
   text: string;
