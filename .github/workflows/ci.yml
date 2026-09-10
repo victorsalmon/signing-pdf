@@ -23,3 +23,22 @@ jobs:
       - run: pnpm run typecheck
       - run: pnpm run build
       - run: pnpm test
+      # Dependency audit: fail closed on MODERATE-or-worse vulnerabilities.
+      # Re-run locally with: pnpm audit --audit-level moderate
+      # (after upgrades, re-run; fix direct deps with `pnpm update`, transitive-only
+      #  findings with a `pnpm.overrides` pin, then re-run the audit).
+      - run: pnpm audit --audit-level moderate
+      # Secret scan: fail-closed grep over the worktree. Only file names are
+      # printed (grep -l), never matching line content, so a hit cannot echo a
+      # secret into CI logs. Generated and vendored trees are excluded.
+      # Re-run locally with: the same grep below (bash) or the Select-String
+      # equivalent in docs/releasing.md (PowerShell).
+      - name: Secret scan
+        run: |
+          matches=$(grep -rEl --exclude-dir=node_modules --exclude-dir=.git --exclude-dir=dist -e 'AKIA[0-9A-Z]{16}' -e 'ghp_[A-Za-z0-9]{36}' -e 'BEGIN [A-Z ]*PRIVATE KEY' -e 'sk-live-[A-Za-z0-9]+' . || true)
+          if [ -n "$matches" ]; then
+            echo 'secret scan: forbidden pattern found in:'
+            printf '%s\n' "$matches"
+            exit 1
+          fi
+          echo 'secret scan: clean'
