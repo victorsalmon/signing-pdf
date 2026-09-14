@@ -12,41 +12,10 @@ PDF points (1/72 inch). `pdf-lib` draws from a **bottom-left origin**, so the
 library converts every placement internally. Callers pass top-left
 coordinates and never convert by hand.
 
-## Conversion formula
+## Conversion formula and worked example
 
-For a page of height `pageHeight` and an element of height
-`elementHeight` (a field's `height`, or a signature image's `height`):
-
-```text
-pdfY = pageHeight - topY - elementHeight
-```
-
-`x` passes through unchanged. Pages are 1-indexed; an out-of-range page
-number throws. This is implemented by `topLeftYToPdfLibY` in
-`src/overlay.ts`:
-
-- Text fields use `height` (this example passes `height: 16` explicitly).
-- Signature images use the overlay's `height`.
-- The certificate page is appended internally and needs no coordinates.
-
-## Worked numeric example
-
-Letter-size page (`612 x 792`pt), recomputed from the new example's actual
-coordinates. The `clientName` text field sits at `x = 60`, `y = 110` with
-`height = 16`:
-
-```text
-pdfY = 792 - 110 - 16 = 666
-```
-
-so it is drawn at pdf-lib coordinates `(60, 666)`. The client signature
-image sits at `x = 60`, `y = 310` with `height = 50`:
-
-```text
-pdfY = 792 - 310 - 50 = 432
-```
-
-drawn at `(60, 432)`.
+The normative conversion formula and a worked numeric example are in
+[`docs/coordinates.md`](coordinates.md) and are not duplicated here.
 
 ## Per-field geometry (`examples/multi-signer-offline.ts`)
 

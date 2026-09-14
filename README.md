@@ -1,9 +1,9 @@
 # signing-pdf
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![TypeScript](https://img.shields.io/badge/TypeScript-5.x-blue.svg)](https://www.typescriptlang.org/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-7.x-blue.svg)](https://www.typescriptlang.org/)
 [![pdf-lib](https://img.shields.io/badge/pdf--lib-1.17-red.svg)](https://pdf-lib.js.org/)
-[![Tests](https://img.shields.io/badge/tests-8%20passing-brightgreen.svg)](#testing)
+[![Tests](https://img.shields.io/badge/tests-31%20passing-brightgreen.svg)](#testing)
 
 Pure [`pdf-lib`](https://pdf-lib.js.org/) primitives for electronic-signature PDF overlay —
 field values, signature images, certificate pages, and finalization. **No AWS, no storage,
@@ -436,15 +436,11 @@ interface CertificatePageData {
 However, most document templates and visual editors use a **top-left origin** (y increases
 downward), which matches how humans read documents.
 
-This package uses **top-left origin** for all field and signature coordinates. The
-conversion to `pdf-lib`'s bottom-left origin is handled internally:
+This package uses **top-left origin** for all field and signature coordinates, and converts
+to `pdf-lib`'s bottom-left origin internally.
 
-```
-pdfY = pageHeight - fieldY - fieldHeight
-```
-
-So when you specify a field at `{ x: 100, y: 200 }`, it appears 100 points from the left
-edge and 200 points from the **top** of the page.
+See [docs/coordinates.md](docs/coordinates.md) for the normative formula, worked example,
+and per-field geometry.
 
 ---
 
@@ -508,7 +504,7 @@ All text is WinAnsi-sanitized before drawing. The page uses 50-point margins.
 ## Testing
 
 The suite uses [Vitest](https://vitest.dev/) and tests against real `pdf-lib` documents.
-8 tests across 4 describe blocks:
+31 tests across 8 describe blocks, including 2 property files (18 tests); see `pnpm test:property`:
 
 | Describe block | Tests | Coverage |
 |---|---|---|

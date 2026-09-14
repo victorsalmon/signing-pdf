@@ -37,7 +37,7 @@
     "build": "tsc -p tsconfig.build.json",
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
-    "test:property": "vitest run \"test/**/*.property.test.ts\"",
+    "test:property": "vitest run property",
     "test:mutation": "stryker run"
   },
   "dependencies": {
