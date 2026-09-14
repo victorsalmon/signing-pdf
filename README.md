@@ -509,9 +509,9 @@ The suite uses [Vitest](https://vitest.dev/) and tests against real `pdf-lib` do
 | Describe block | Tests | Coverage |
 |---|---|---|
 | `embedCertificatePage` | 2 | Certificate page layout, signer details, integrity hash |
-| `embedFieldValues` | 2 | Field text embedding, coordinate conversion, skip empty values |
-| `embedSignatureImage` | 2 | PNG embedding, base64 data URI parsing, invalid PNG error |
-| `sanitizeWinAnsi` | 2 | Unicode replacement, control character stripping |
+| `embedFieldValues` | 4 | Field text embedding, coordinate conversion, skip empty values |
+| `embedSignatureImage` | 4 | PNG embedding, base64 data URI parsing, invalid PNG error |
+| `sanitizeWinAnsi` | 3 | Unicode replacement, control character stripping |
 
 ```bash
 npm test             # vitest run (real pdf-lib documents, no mocks)
