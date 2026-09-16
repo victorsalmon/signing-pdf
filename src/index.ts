@@ -11,6 +11,7 @@ export {
   embedFieldValues,
   embedSignatureImage,
   embedCertificatePage,
+  type PdfFieldType,
   type PdfOverlayField,
   type SignatureOverlay,
   type CertificateSignerEntry,
