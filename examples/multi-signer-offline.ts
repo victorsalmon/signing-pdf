@@ -33,11 +33,9 @@ import {
 const PLACEHOLDER_SIGNATURE_PNG_BASE64 =
   'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+ip1sAAAAASUVORK5CYII=';
 
-// 1. Start from a blank letter-size page.
 const pdf = await PDFDocument.create();
 pdf.addPage([612, 792]);
 
-// 2. Overlay two role-tagged field sets (top-left origin coordinates).
 // Geometry is intentionally distinct from `examples/multi-signer.ts`.
 const fields: PdfOverlayField[] = [
   { key: 'clientName', role: 'client', page: 1, x: 60, y: 110, width: 300, height: 16, fontSize: 12 },
@@ -52,13 +50,11 @@ await embedFieldValues(pdf, fields, {
   contractorEmail: 'john@example.com',
 });
 
-// 3. Embed one signature placement per signer (top-left origin coordinates).
 const clientSignature: SignatureOverlay = { page: 1, x: 60, y: 310, width: 180, height: 50 };
 const contractorSignature: SignatureOverlay = { page: 1, x: 330, y: 310, width: 180, height: 50 };
 await embedSignatureImage(pdf, PLACEHOLDER_SIGNATURE_PNG_BASE64, clientSignature);
 await embedSignatureImage(pdf, PLACEHOLDER_SIGNATURE_PNG_BASE64, contractorSignature);
 
-// 4. Append a certificate-of-completion page covering both signers.
 const now = new Date().toISOString();
 await embedCertificatePage(pdf, {
   documentTitle: 'Multi-Signer Offline Consulting Agreement',
@@ -71,7 +67,6 @@ await embedCertificatePage(pdf, {
   integrityHash: 'multisigner-offline-example-hash',
 });
 
-// 5. Finalize and write the bytes to the OS temp directory.
 const bytes = await finalizeSignedPdf(pdf);
 const outPath = join(tmpdir(), 'signing-pdf-multi-signer-offline.pdf');
 await writeFile(outPath, bytes);

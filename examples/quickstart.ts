@@ -17,18 +17,15 @@ import {
   finalizeSignedPdf,
 } from '../src/index.js';
 
-// 1. Start from a blank letter-size page.
 const pdf = await PDFDocument.create();
 pdf.addPage([612, 792]);
 
-// 2. Overlay field values (top-left origin coordinates).
 await embedFieldValues(
   pdf,
   [{ key: 'clientName', page: 1, x: 100, y: 200, width: 250, fontSize: 11 }],
   { clientName: 'Jane Doe' },
 );
 
-// 3. Append a certificate-of-completion page.
 await embedCertificatePage(pdf, {
   documentTitle: 'Service Agreement',
   envelopeId: 'env-quickstart-0001',
@@ -44,7 +41,6 @@ await embedCertificatePage(pdf, {
   integrityHash: 'quickstart-example-hash',
 });
 
-// 4. Finalize and write the bytes.
 const bytes = await finalizeSignedPdf(pdf);
 const outPath = join(tmpdir(), 'signing-pdf-quickstart.pdf');
 await writeFile(outPath, bytes);
