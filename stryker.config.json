@@ -8,6 +8,8 @@
     "related": false
   },
   "coverageAnalysis": "perTest",
+  "incremental": true,
+  "incrementalFile": "stryker-report/mutation/incremental.json",
   "concurrency": 2,
   "timeoutMS": 45000,
   "timeoutFactor": 2,
