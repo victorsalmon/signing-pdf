@@ -29,7 +29,7 @@ no product coupling — just PDF manipulation.**
   - [`embedSignatureImage(pdf, imageBase64, overlay)`](#embedsignatureimagepdf-imagebase64-overlay)
   - [`embedCertificatePage(pdf, data, options?)`](#embedcertificatepagepdf-data-options)
   - [`finalizeSignedPdf(pdf)`](#finalizesignedpdfpdf)
-  - [`sanitizeWinAnsi(text)`](#sanitizewinanitext)
+  - [`sanitizeWinAnsi(text)`](#sanitizewinansitext)
   - [Re-exports](#re-exports)
   - [Types](#types)
 - [Coordinate system](#coordinate-system)
@@ -171,6 +171,8 @@ const signedBytes = await finalizeSignedPdf(pdf);
 await fs.writeFile('agreement-signed.pdf', signedBytes);
 ```
 
+A runnable, offline version lives in [`examples/quickstart.ts`](examples/quickstart.ts).
+
 ---
 
 ## API reference
@@ -251,8 +253,7 @@ await embedSignatureImage(pdf, 'data:image/png;base64,iVBORw0KGgo...', {
 - `overlay` — `SignatureOverlay` with `page`, `x`, `y` (top-left origin), `width`, `height`
 
 **Throws:**
-- `TypeError('Invalid base64 PNG signature image')` — if the base64 is malformed
-- `TypeError('Signature image must be a valid PNG')` — if the bytes are not a valid PNG
+- `TypeError('Signature image must be a valid PNG')` — if the base64 is malformed or the decoded bytes are not a valid PNG
 - `Error('Page N does not exist...')` — if the page number is out of range
 
 ---
@@ -297,16 +298,7 @@ await embedCertificatePage(
 - `options.font` — optional regular font (defaults to `StandardFonts.Helvetica`)
 - `options.boldFont` — optional bold font (defaults to `StandardFonts.HelveticaBold`)
 
-**Certificate page layout:**
-- Title: "Certificate of Completion" (18pt bold)
-- Document title (12pt)
-- Envelope ID (12pt)
-- Completed At timestamp (12pt)
-- "Signers:" heading (14pt bold)
-- Per signer: name, email, role (10pt) + signed-at + optional IP + optional User-Agent (10pt)
-- Integrity Hash (SHA-256) (10pt)
-
-All text is WinAnsi-sanitized before drawing.
+**Certificate page layout:** see [Certificate page](#certificate-page).
 
 ---
 
@@ -350,7 +342,9 @@ line feed (10), and carriage return (13).
 
 **Characters > 255:** replaced with the mapping above, or a space if no mapping exists.
 
-This function is called automatically by `embedFieldValues` and `embedCertificatePage`.
+This function is called automatically by `embedFieldValues` (all field values) and
+`embedCertificatePage` (document title and signer names). Other certificate fields
+(envelope ID, timestamps, email, role, IP, User-Agent, integrity hash) are drawn verbatim.
 You only need to call it directly if you're drawing text with `pdf-lib` directly and want
 the same sanitization.
 
@@ -439,8 +433,11 @@ downward), which matches how humans read documents.
 This package uses **top-left origin** for all field and signature coordinates, and converts
 to `pdf-lib`'s bottom-left origin internally.
 
-See [docs/coordinates.md](docs/coordinates.md) for the normative formula, worked example,
-and per-field geometry.
+See [docs/coordinates.md](docs/coordinates.md) for the normative formula and worked example.
+Per-field geometry tables: [examples/multi-signer.ts](examples/multi-signer.ts) (table in
+[docs/coordinates.md](docs/coordinates.md)) and
+[examples/multi-signer-offline.ts](examples/multi-signer-offline.ts) (table in
+[docs/coordinates-system.md](docs/coordinates-system.md)).
 
 ---
 
@@ -453,12 +450,13 @@ cause `pdf-lib` to throw `Error: WinAnsi encoding does not support this characte
 
 `sanitizeWinAnsi()` replaces the most common problematic Unicode characters with their
 ASCII equivalents and strips control characters. It is called automatically by
-`embedFieldValues` and `embedCertificatePage`, so you usually don't need to call it
-directly.
+`embedFieldValues` and for the document title and signer names in `embedCertificatePage`,
+so you usually don't need to call it directly.
 
 If you embed custom fonts (e.g. a Unicode TrueType font via `pdf.embedFont(ttfBytes)`),
-those fonts support full Unicode and you do **not** need sanitization — but this package
-sanitizes regardless, which is safe (the replacements are idempotent for ASCII input).
+those fonts support full Unicode and you do **not** need sanitization — but the package
+sanitizes the field values and certificate names it draws regardless, which is safe
+(the replacements are idempotent for ASCII input).
 
 ---
 
@@ -497,7 +495,8 @@ The certificate page is appended as the **last page** of the PDF. It includes:
   - User-Agent (10pt, if provided)
 - **Integrity Hash**: the SHA-256 `integrityHash` (10pt)
 
-All text is WinAnsi-sanitized before drawing. The page uses 50-point margins.
+The document title and signer names are WinAnsi-sanitized before drawing; other
+certificate fields are drawn verbatim. The page uses 50-point margins.
 
 ---
 
@@ -512,6 +511,10 @@ The suite uses [Vitest](https://vitest.dev/) and tests against real `pdf-lib` do
 | `embedFieldValues` | 4 | Field text embedding, coordinate conversion, skip empty values |
 | `embedSignatureImage` | 4 | PNG embedding, base64 data URI parsing, invalid PNG error |
 | `sanitizeWinAnsi` | 3 | Unicode replacement, control character stripping |
+| `embedCertificatePage` (property) | 1 | Page append and exact header layout invariants |
+| `embedFieldValues` (property) | 3 | Page-range errors, flipped-y drawing, skip semantics |
+| `embedSignatureImage` (property) | 3 | Data-URI parsing, flipped-y dimensions, non-PNG rejection |
+| `sanitizeWinAnsi` (property) | 11 | Idempotence, WinAnsi boundary, control-char and mapping invariants |
 
 ```bash
 npm test             # vitest run (real pdf-lib documents, no mocks)
@@ -548,18 +551,39 @@ pnpm run build        # tsc -p tsconfig.build.json
 ```text
 signing-pdf/
 ├── src/
-│   ├── index.ts      # Public exports + pdf-lib re-exports
-│   ├── load.ts       # loadPdf — load a PDF from bytes
-│   ├── overlay.ts    # embedFieldValues, embedSignatureImage, embedCertificatePage + types
-│   ├── finalize.ts   # finalizeSignedPdf — save to bytes
-│   └── sanitize.ts   # sanitizeWinAnsi — WinAnsi encoding sanitization
+│   ├── index.ts                   # Public exports + pdf-lib re-exports
+│   ├── load.ts                    # loadPdf — load a PDF from bytes
+│   ├── overlay.ts                 # embedFieldValues, embedSignatureImage, embedCertificatePage + types
+│   ├── finalize.ts                # finalizeSignedPdf — save to bytes
+│   └── sanitize.ts                # sanitizeWinAnsi — WinAnsi encoding sanitization
 ├── test/
-│   ├── certificate.test.ts  # Certificate page tests
-│   ├── overlay.test.ts      # Field + signature overlay tests
-│   └── sanitize.test.ts     # WinAnsi sanitization tests
+│   ├── certificate.test.ts        # Certificate page tests
+│   ├── overlay.test.ts            # Field + signature overlay tests
+│   ├── sanitize.test.ts           # WinAnsi sanitization tests
+│   ├── overlay.property.test.ts   # Property tests for the overlay primitives
+│   ├── sanitize.property.test.ts  # Property tests for WinAnsi sanitization
+│   └── fixtures.ts                # Shared test fixtures
+├── examples/
+│   ├── quickstart.ts              # Minimal overlay + certificate flow
+│   ├── multi-signer.ts            # Two-signer example (client + contractor)
+│   └── multi-signer-offline.ts    # Companion example with distinct geometry
+├── docs/
+│   ├── coordinates.md             # Normative coordinate formula (top-left origin)
+│   └── coordinates-system.md      # Per-field geometry for multi-signer-offline.ts
+├── .github/workflows/ci.yml       # typecheck, build, unit + property tests
 ├── package.json
+├── pnpm-lock.yaml
+├── pnpm-workspace.yaml
+├── vitest.config.ts
+├── stryker.config.json
 ├── tsconfig.json
 ├── tsconfig.build.json
+├── .nvmrc
+├── .gitignore
+├── CHANGELOG.md
+├── CONTRIBUTING.md
+├── CODE_OF_CONDUCT.md
+├── SECURITY.md
 ├── LICENSE
 └── README.md
 ```
@@ -577,7 +601,7 @@ This package handles the PDF layer. A complete e-signature flow typically also n
 4. **Web UI** — a signature pad and field form for the signer (not included)
 5. **Webhook/API** — receive signing events and trigger finalization (not included)
 
-This package handles step 5's PDF finalization (load → embed fields → embed signatures →
+This package handles the PDF layer (load → embed fields → embed signatures →
 append certificate → finalize) and nothing else. The orchestration, storage, email, and
 UI layers are the consuming application's responsibility.
 
@@ -585,7 +609,10 @@ UI layers are the consuming application's responsibility.
 
 ## Contributing
 
-Pull requests are welcome.
+Pull requests are welcome. See [CONTRIBUTING.md](CONTRIBUTING.md) for setup and review
+guidelines, [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md) for community expectations, and
+[SECURITY.md](SECURITY.md) to report a vulnerability. Release history lives in
+[CHANGELOG.md](CHANGELOG.md).
 
 ### Guidelines
 

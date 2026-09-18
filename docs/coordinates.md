@@ -64,14 +64,10 @@ does not affect placement.
 ## WinAnsi text note
 
 Text is drawn with `pdf-lib`'s standard Helvetica fonts, which only support
-WinAnsi (8-bit) characters. Every value passes through `sanitizeWinAnsi`
-(`src/sanitize.ts`) before drawing:
-
-- C0 control characters (`0–31`) are dropped, except tab, line feed, and
-  carriage return, which are preserved.
-- Known Unicode punctuation is mapped to an ASCII equivalent: `‘ ’` → `'`,
-  `“ ”` → `"`, `– —` → `-`, `…` → `...`.
-- Any remaining code point above `255` is replaced with a single space.
+WinAnsi (8-bit) characters. Every field value passes through `sanitizeWinAnsi`
+(`src/sanitize.ts`) before drawing; the full replacement table lives in the
+[WinAnsi sanitization](../README.md#winansi-sanitization) section of the
+README.
 
 Keep field values within WinAnsi (plain ASCII plus Latin-1) to avoid
 silent `...`/space substitutions on the rendered page.

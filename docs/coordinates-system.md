@@ -19,7 +19,8 @@ The normative conversion formula and a worked numeric example are in
 
 ## Per-field geometry (`examples/multi-signer-offline.ts`)
 
-Letter page (`612 x 792`pt). Every `pdfY` below follows the formula above.
+Letter page (`612 x 792`pt). Every `pdfY` below follows the formula in
+[`docs/coordinates.md`](coordinates.md).
 
 | Field / placement   | Role       | Page | x   | y (top-left) | w x h (pt) | Font | pdfY |
 | ------------------- | ---------- | ---- | --- | ------------ | ---------- | ---- | ---- |
