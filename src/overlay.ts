@@ -223,8 +223,8 @@ export async function embedSignatureImage(
   overlay: SignatureOverlay,
 ): Promise<void> {
   const bytes = decodeBase64Png(imageBase64);
-  const signature: PDFImage = await pdf.embedPng(bytes).catch(() => {
-    throw new TypeError('Signature image must be a valid PNG');
+  const signature: PDFImage = await pdf.embedPng(bytes).catch((error: unknown) => {
+    throw new TypeError('Signature image must be a valid PNG', { cause: error });
   });
 
   const page = await getPage(pdf, overlay.page);
@@ -284,6 +284,11 @@ function drawCertificateLine({
 /**
  * Appends a "Certificate of Completion" page with signer and integrity metadata.
  *
+ * Every caller-supplied value (title, envelope ID, timestamps, signer name,
+ * email, role, signed-at, IP, User-Agent, and integrity hash) is passed through
+ * `sanitizeWinAnsi` before drawing, so non-WinAnsi input cannot make the
+ * standard font throw during rendering.
+ *
  * @param pdf - The PDF document.
  * @param data - Certificate page data.
  * @param options - Optional custom fonts.
@@ -314,28 +319,32 @@ export async function embedCertificatePage(
   draw('Certificate of Completion', CERTIFICATE_TITLE_FONT_SIZE, boldFont);
   y -= CERTIFICATE_BLOCK_GAP;
   draw(`Document: ${sanitizeWinAnsi(data.documentTitle)}`, CERTIFICATE_METADATA_FONT_SIZE, font);
-  draw(`Envelope ID: ${data.envelopeId}`, CERTIFICATE_METADATA_FONT_SIZE, font);
-  draw(`Completed At: ${data.completedAt}`, CERTIFICATE_METADATA_FONT_SIZE, font);
+  draw(`Envelope ID: ${sanitizeWinAnsi(data.envelopeId)}`, CERTIFICATE_METADATA_FONT_SIZE, font);
+  draw(`Completed At: ${sanitizeWinAnsi(data.completedAt)}`, CERTIFICATE_METADATA_FONT_SIZE, font);
   y -= CERTIFICATE_BLOCK_GAP;
   draw('Signers:', CERTIFICATE_SIGNERS_HEADER_FONT_SIZE, boldFont);
   y -= CERTIFICATE_SIGNER_GAP;
 
   for (const signer of data.signers) {
     draw(
-      `${sanitizeWinAnsi(signer.name)} <${signer.email}> — ${signer.role}`,
+      `${sanitizeWinAnsi(signer.name)} <${sanitizeWinAnsi(signer.email)}> — ${sanitizeWinAnsi(signer.role)}`,
       CERTIFICATE_DETAIL_FONT_SIZE,
       font,
     );
-    draw(`  Signed at: ${signer.signedAt}`, CERTIFICATE_DETAIL_FONT_SIZE, font);
+    draw(`  Signed at: ${sanitizeWinAnsi(signer.signedAt)}`, CERTIFICATE_DETAIL_FONT_SIZE, font);
     if (signer.ip) {
-      draw(`  IP: ${signer.ip}`, CERTIFICATE_DETAIL_FONT_SIZE, font);
+      draw(`  IP: ${sanitizeWinAnsi(signer.ip)}`, CERTIFICATE_DETAIL_FONT_SIZE, font);
     }
     if (signer.userAgent) {
-      draw(`  User-Agent: ${signer.userAgent}`, CERTIFICATE_DETAIL_FONT_SIZE, font);
+      draw(`  User-Agent: ${sanitizeWinAnsi(signer.userAgent)}`, CERTIFICATE_DETAIL_FONT_SIZE, font);
     }
     y -= CERTIFICATE_SIGNER_GAP;
   }
 
   y -= CERTIFICATE_BLOCK_GAP;
-  draw(`Integrity Hash (SHA-256): ${data.integrityHash}`, CERTIFICATE_DETAIL_FONT_SIZE, font);
+  draw(
+    `Integrity Hash (SHA-256): ${sanitizeWinAnsi(data.integrityHash)}`,
+    CERTIFICATE_DETAIL_FONT_SIZE,
+    font,
+  );
 }
