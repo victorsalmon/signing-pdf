@@ -5,6 +5,17 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Security
+
+- Sanitize every caller-supplied certificate value (`envelopeId`, `completedAt`, signer `email`, `role`, `signedAt`, `ip`, `userAgent`, and `integrityHash`) before drawing. Attacker-controlled input containing non-WinAnsi characters (for example an emoji in a `User-Agent`) previously threw `WinAnsi cannot encode` and aborted certificate rendering.
+- Resolve transitive `fast-uri` (high, 4 advisories) and `qs` (moderate, 3 advisories) advisories in the dev toolchain via pnpm overrides, and add a `pnpm audit` gate to CI.
+
+### Fixed
+
+- `embedSignatureImage` now preserves the original `pdf-lib` error as the `cause` of the `TypeError('Signature image must be a valid PNG')` it throws.
+
 ## [1.0.0] - 2026-08-17
 
 ### Added

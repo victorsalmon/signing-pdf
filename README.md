@@ -3,7 +3,7 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![TypeScript](https://img.shields.io/badge/TypeScript-7.x-blue.svg)](https://www.typescriptlang.org/)
 [![pdf-lib](https://img.shields.io/badge/pdf--lib-1.17-red.svg)](https://pdf-lib.js.org/)
-[![Tests](https://img.shields.io/badge/tests-31%20passing-brightgreen.svg)](#testing)
+[![Tests](https://img.shields.io/badge/tests-33%20passing-brightgreen.svg)](#testing)
 
 Pure [`pdf-lib`](https://pdf-lib.js.org/) primitives for electronic-signature PDF overlay —
 field values, signature images, certificate pages, and finalization. **No AWS, no storage,
@@ -343,10 +343,11 @@ line feed (10), and carriage return (13).
 **Characters > 255:** replaced with the mapping above, or a space if no mapping exists.
 
 This function is called automatically by `embedFieldValues` (all field values) and
-`embedCertificatePage` (document title and signer names). Other certificate fields
-(envelope ID, timestamps, email, role, IP, User-Agent, integrity hash) are drawn verbatim.
-You only need to call it directly if you're drawing text with `pdf-lib` directly and want
-the same sanitization.
+`embedCertificatePage` (every caller-supplied value: title, envelope ID, timestamps,
+signer name/email/role/signed-at/IP/User-Agent, and integrity hash). Nothing drawn by
+the package is passed to `pdf-lib` unsanitized, so non-WinAnsi input cannot make the
+standard fonts throw. You only need to call it directly if you're drawing text with
+`pdf-lib` directly and want the same sanitization.
 
 ---
 
@@ -450,7 +451,7 @@ cause `pdf-lib` to throw `Error: WinAnsi encoding does not support this characte
 
 `sanitizeWinAnsi()` replaces the most common problematic Unicode characters with their
 ASCII equivalents and strips control characters. It is called automatically by
-`embedFieldValues` and for the document title and signer names in `embedCertificatePage`,
+`embedFieldValues` and for every caller-supplied value in `embedCertificatePage`,
 so you usually don't need to call it directly.
 
 If you embed custom fonts (e.g. a Unicode TrueType font via `pdf.embedFont(ttfBytes)`),
@@ -495,19 +496,20 @@ The certificate page is appended as the **last page** of the PDF. It includes:
   - User-Agent (10pt, if provided)
 - **Integrity Hash**: the SHA-256 `integrityHash` (10pt)
 
-The document title and signer names are WinAnsi-sanitized before drawing; other
-certificate fields are drawn verbatim. The page uses 50-point margins.
+Every caller-supplied value is WinAnsi-sanitized before drawing (see
+[WinAnsi sanitization](#winansi-sanitization)), so non-WinAnsi input cannot make the
+standard fonts throw. The page uses 50-point margins.
 
 ---
 
 ## Testing
 
 The suite uses [Vitest](https://vitest.dev/) and tests against real `pdf-lib` documents.
-31 tests across 8 describe blocks, including 2 property files (18 tests); see `pnpm test:property`:
+33 tests across 8 describe blocks, including 2 property files (18 tests); see `pnpm test:property`:
 
 | Describe block | Tests | Coverage |
 |---|---|---|
-| `embedCertificatePage` | 2 | Certificate page layout, signer details, integrity hash |
+| `embedCertificatePage` | 4 | Certificate page layout, signer details, integrity hash, WinAnsi sanitization of all caller fields |
 | `embedFieldValues` | 4 | Field text embedding, coordinate conversion, skip empty values |
 | `embedSignatureImage` | 4 | PNG embedding, base64 data URI parsing, invalid PNG error |
 | `sanitizeWinAnsi` | 3 | Unicode replacement, control character stripping |
