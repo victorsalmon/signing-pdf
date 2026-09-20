@@ -1,0 +1,25 @@
+version: 1
+target_repo: signing-pdf
+region_required: ca-central-1
+standards:
+  canadian_data_sovereignty:
+    status: not_applicable
+    rationale: 'Stateless rendering library: no data store, key store, log sink, or network surface, so there is no residency-controlled data to place in ca-central-1. Residency of the PDFs and signer data rests with the consuming platform.'
+  pipeda:
+    status: not_applicable
+    rationale: 'No collection, storage, retention, or transmission of personal information: the library only draws caller-supplied values into an in-memory PDF that the caller persists. PII controls rest with the consuming platform; the fixture policy here forbids real personal data.'
+  soc2:
+    status: not_applicable
+    rationale: 'No service, infrastructure, access-control, or change-management surface in a source-only library; SOC 2 controls rest with the consuming platform.'
+  iso_27001:
+    status: not_applicable
+    rationale: 'No ISMS scope: a rendering library does not operate an information-management system or process. Controls rest with the consuming organization.'
+  hipaa:
+    status: not_applicable
+    rationale: 'No PHI at rest or in transit handled by the library; it renders only the values a caller supplies to an in-memory document. HIPAA controls rest with the covered entity.'
+  gdpr:
+    status: not_applicable
+    rationale: 'Canada-only ecosystem; no EU/EEA data subjects and no library-side processing or transfer. Revisit before any EU customer onboarding.'
+run_native_engine: false
+last_confirmed: 2026-09-19
+reconfirm_after_days: 365
