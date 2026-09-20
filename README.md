@@ -100,7 +100,7 @@ pnpm add @clocklobster/signing-pdf
 
 ### Requirements
 
-- **Node.js >= 18** (uses `Buffer` for base64 decoding)
+- **Node.js >= 22.12** (uses `Buffer` for base64 decoding)
 - **TypeScript >= 5** (for type consumers; ships `.d.ts` files)
 
 ---
@@ -542,7 +542,7 @@ pnpm run build        # tsc -p tsconfig.build.json
 
 ### Requirements
 
-- Node.js >= 18
+- Node.js >= 22.12
 - pnpm (or npm/yarn)
 - TypeScript >= 5
 

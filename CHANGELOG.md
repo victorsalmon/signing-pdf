@@ -12,6 +12,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Sanitize every caller-supplied certificate value (`envelopeId`, `completedAt`, signer `email`, `role`, `signedAt`, `ip`, `userAgent`, and `integrityHash`) before drawing. Attacker-controlled input containing non-WinAnsi characters (for example an emoji in a `User-Agent`) previously threw `WinAnsi cannot encode` and aborted certificate rendering.
 - Resolve transitive `fast-uri` (high, 4 advisories) and `qs` (moderate, 3 advisories) advisories in the dev toolchain via pnpm overrides, and add a `pnpm audit` gate to CI.
 
+### Changed
+
+- Raise the published Node.js floor to `>=22.12.0` (was `>=18`) to match the development toolchain: `.nvmrc` pins 22.12.0, the pinned actions run Node 22, and Vitest 5 / Stryker 10 require Node 22. Node 18 and 20 consumers must upgrade; no runtime API changed.
+
 ### Fixed
 
 - `embedSignatureImage` now preserves the original `pdf-lib` error as the `cause` of the `TypeError('Signature image must be a valid PNG')` it throws.

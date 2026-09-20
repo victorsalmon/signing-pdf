@@ -6,7 +6,7 @@
 pnpm install
 ```
 
-Requires Node.js >= 18 (dev/CI pin: `.nvmrc`, currently 22).
+Requires Node.js >= 22.12 (dev/CI pin: `.nvmrc`, currently 22.12.0).
 
 ## Test
 
