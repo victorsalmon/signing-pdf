@@ -1,8 +1,11 @@
 import { PDFDocument } from 'pdf-lib';
+import { PLACEHOLDER_SIGNATURE_PNG_BASE64 } from '../examples/multi-signer-common.js';
 
-/** A minimal 1x1 transparent PNG, base64-encoded. */
-export const ONE_PIXEL_PNG =
-  'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+ip1sAAAAASUVORK5CYII=';
+/**
+ * A minimal 1x1 transparent PNG, base64-encoded.
+ * Shared with the runnable examples so the literal has a single owner.
+ */
+export const ONE_PIXEL_PNG = PLACEHOLDER_SIGNATURE_PNG_BASE64;
 
 /**
  * Creates a blank US Letter-sized PDF with the requested number of pages.
