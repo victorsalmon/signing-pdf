@@ -11,6 +11,12 @@ import { createBlankPdf, ONE_PIXEL_PNG } from './fixtures.js';
 describe('embedFieldValues', () => {
   it('draws provided values onto the PDF', async () => {
     const pdf = await createBlankPdf();
+    const page = pdf.getPage(0);
+    const draws: string[] = [];
+    page.drawText = vi.fn((text: string) => {
+      draws.push(text);
+    }) as unknown as typeof page.drawText;
+
     await embedFieldValues(
       pdf,
       [
@@ -23,16 +29,28 @@ describe('embedFieldValues', () => {
       },
     );
 
+    expect(draws).toEqual(['Alice Smith', '2026-08-19']);
+
     const bytes = await finalizeSignedPdf(pdf);
     const reloaded = await loadPdf(bytes);
     expect(reloaded.getPageCount()).toBe(1);
   });
 
-  it('skips undefined and null values', async () => {
+  it('skips undefined, null, and empty values', async () => {
     const pdf = await createBlankPdf();
+    const page = pdf.getPage(0);
+    const drawText = vi.fn();
+    page.drawText = drawText as unknown as typeof page.drawText;
+
     await embedFieldValues(pdf, [{ key: 'empty', page: 1, x: 50, y: 50 }], { empty: undefined });
+    await embedFieldValues(pdf, [{ key: 'empty', page: 1, x: 50, y: 50 }], { empty: null });
+    await embedFieldValues(pdf, [{ key: 'empty', page: 1, x: 50, y: 50 }], { empty: '' });
+
+    expect(drawText).not.toHaveBeenCalled();
+
     const bytes = await finalizeSignedPdf(pdf);
-    expect(bytes.length).toBeGreaterThan(0);
+    const reloaded = await loadPdf(bytes);
+    expect(reloaded.getPageCount()).toBe(1);
   });
 
   it('rejects a page number of 0', async () => {

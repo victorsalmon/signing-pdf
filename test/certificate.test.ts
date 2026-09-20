@@ -60,7 +60,14 @@ describe('embedCertificatePage', () => {
       { font, boldFont },
     );
 
-    expect(draws.length).toBeGreaterThan(0);
+    expect(draws.map((d) => d.text)).toEqual([
+      'Certificate of Completion',
+      'Document: Test Document',
+      'Envelope ID: env-1',
+      'Completed At: 2026-01-01T00:00:00Z',
+      'Signers:',
+      'Integrity Hash (SHA-256): hash-1',
+    ]);
 
     const title = draws.find((d) => d.text === 'Certificate of Completion');
     expect(title).toBeDefined();
