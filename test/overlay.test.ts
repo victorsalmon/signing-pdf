@@ -1,17 +1,27 @@
 import { describe, it, expect, vi } from 'vitest';
-import { embedFieldValues, embedSignatureImage, finalizeSignedPdf, loadPdf, StandardFonts } from '../src/index.js';
+import {
+  embedFieldValues,
+  embedSignatureImage,
+  finalizeSignedPdf,
+  loadPdf,
+  StandardFonts,
+} from '../src/index.js';
 import { createBlankPdf, ONE_PIXEL_PNG } from './fixtures.js';
 
 describe('embedFieldValues', () => {
   it('draws provided values onto the PDF', async () => {
     const pdf = await createBlankPdf();
-    await embedFieldValues(pdf, [
-      { key: 'name', page: 1, x: 50, y: 50, width: 200, height: 14 },
-      { key: 'date', page: 1, x: 50, y: 80, width: 200, height: 14 },
-    ], {
-      name: 'Alice Smith',
-      date: '2026-08-19',
-    });
+    await embedFieldValues(
+      pdf,
+      [
+        { key: 'name', page: 1, x: 50, y: 50, width: 200, height: 14 },
+        { key: 'date', page: 1, x: 50, y: 80, width: 200, height: 14 },
+      ],
+      {
+        name: 'Alice Smith',
+        date: '2026-08-19',
+      },
+    );
 
     const bytes = await finalizeSignedPdf(pdf);
     const reloaded = await loadPdf(bytes);
@@ -72,13 +82,13 @@ describe('embedSignatureImage', () => {
   it('rejects non-PNG / invalid base64', async () => {
     const pdf = await createBlankPdf();
     await expect(
-      embedSignatureImage(pdf, 'not-valid', { page: 1, x: 0, y: 0, width: 1, height: 1 })
+      embedSignatureImage(pdf, 'not-valid', { page: 1, x: 0, y: 0, width: 1, height: 1 }),
     ).rejects.toThrow(/PNG/);
   });
 
   it('rejects a PNG data URI that does not start at the beginning of the string', async () => {
     const pdf = await createBlankPdf();
-    const garbage = "~!@#$%^&*()_?<>[]{}|;':\"<,.";
+    const garbage = '~!@#$%^&*()_?<>[]{}|;\':"<,.';
     const dataUri = `data:image/png;base64,${ONE_PIXEL_PNG}`;
     await expect(
       embedSignatureImage(pdf, garbage + dataUri, { page: 1, x: 0, y: 0, width: 1, height: 1 }),

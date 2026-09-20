@@ -123,11 +123,9 @@ describe('embedFieldValues — property tests', () => {
         const pdf = await createBlankPdf(1);
         const page = pdf.getPage(0);
         const draws = spyDrawText(page);
-        await embedFieldValues(
-          pdf,
-          [{ key: 'k', page: 1, x: 10, y: 10, width: 100, height: 14 }],
-          { k: value },
-        );
+        await embedFieldValues(pdf, [{ key: 'k', page: 1, x: 10, y: 10, width: 100, height: 14 }], {
+          k: value,
+        });
         expect(draws).toHaveLength(0);
       }),
     );

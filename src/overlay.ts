@@ -1,7 +1,8 @@
 import { PDFDocument, PDFPage, PDFFont, PDFImage, rgb, StandardFonts } from 'pdf-lib';
 import { sanitizeWinAnsi } from './sanitize.js';
 
-export type PdfFieldType = 'text' | 'textarea' | 'signature' | 'fillableDate' | 'variable' | 'static';
+export type PdfFieldType =
+  'text' | 'textarea' | 'signature' | 'fillableDate' | 'variable' | 'static';
 
 /** Field overlay definition for a single PDF form-like value. */
 export interface PdfOverlayField {
@@ -336,7 +337,11 @@ export async function embedCertificatePage(
       draw(`  IP: ${sanitizeWinAnsi(signer.ip)}`, CERTIFICATE_DETAIL_FONT_SIZE, font);
     }
     if (signer.userAgent) {
-      draw(`  User-Agent: ${sanitizeWinAnsi(signer.userAgent)}`, CERTIFICATE_DETAIL_FONT_SIZE, font);
+      draw(
+        `  User-Agent: ${sanitizeWinAnsi(signer.userAgent)}`,
+        CERTIFICATE_DETAIL_FONT_SIZE,
+        font,
+      );
     }
     y -= CERTIFICATE_SIGNER_GAP;
   }

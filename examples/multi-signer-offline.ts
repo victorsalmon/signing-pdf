@@ -38,10 +38,46 @@ pdf.addPage([612, 792]);
 
 // Geometry is intentionally distinct from `examples/multi-signer.ts`.
 const fields: PdfOverlayField[] = [
-  { key: 'clientName', role: 'client', page: 1, x: 60, y: 110, width: 300, height: 16, fontSize: 12 },
-  { key: 'clientEmail', role: 'client', page: 1, x: 60, y: 140, width: 300, height: 16, fontSize: 12 },
-  { key: 'contractorName', role: 'contractor', page: 1, x: 60, y: 220, width: 300, height: 16, fontSize: 12 },
-  { key: 'contractorEmail', role: 'contractor', page: 1, x: 60, y: 250, width: 300, height: 16, fontSize: 12 },
+  {
+    key: 'clientName',
+    role: 'client',
+    page: 1,
+    x: 60,
+    y: 110,
+    width: 300,
+    height: 16,
+    fontSize: 12,
+  },
+  {
+    key: 'clientEmail',
+    role: 'client',
+    page: 1,
+    x: 60,
+    y: 140,
+    width: 300,
+    height: 16,
+    fontSize: 12,
+  },
+  {
+    key: 'contractorName',
+    role: 'contractor',
+    page: 1,
+    x: 60,
+    y: 220,
+    width: 300,
+    height: 16,
+    fontSize: 12,
+  },
+  {
+    key: 'contractorEmail',
+    role: 'contractor',
+    page: 1,
+    x: 60,
+    y: 250,
+    width: 300,
+    height: 16,
+    fontSize: 12,
+  },
 ];
 await embedFieldValues(pdf, fields, {
   clientName: 'Jane Doe',

@@ -11,11 +11,7 @@ import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { writeFile } from 'node:fs/promises';
 import { PDFDocument } from 'pdf-lib';
-import {
-  embedFieldValues,
-  embedCertificatePage,
-  finalizeSignedPdf,
-} from '../src/index.js';
+import { embedFieldValues, embedCertificatePage, finalizeSignedPdf } from '../src/index.js';
 
 const pdf = await PDFDocument.create();
 pdf.addPage([612, 792]);
