@@ -519,7 +519,7 @@ The suite uses [Vitest](https://vitest.dev/) and tests against real `pdf-lib` do
 | `sanitizeWinAnsi` (property) | 11 | Idempotence, WinAnsi boundary, control-char and mapping invariants |
 
 ```bash
-npm test             # vitest run (real pdf-lib documents, no mocks)
+pnpm test            # vitest run (real pdf-lib documents, no mocks)
 ```
 
 ---
@@ -572,7 +572,7 @@ signing-pdf/
 ├── docs/
 │   ├── coordinates.md             # Normative coordinate formula (top-left origin)
 │   └── coordinates-system.md      # Per-field geometry for multi-signer-offline.ts
-├── .github/workflows/ci.yml       # typecheck, build, unit + property tests
+├── .github/workflows/ci.yml       # install, audit, format:check, typecheck, build, tests
 ├── package.json
 ├── pnpm-lock.yaml
 ├── pnpm-workspace.yaml
@@ -581,7 +581,11 @@ signing-pdf/
 ├── tsconfig.json
 ├── tsconfig.build.json
 ├── .nvmrc
+├── .editorconfig
+├── .prettierignore
 ├── .gitignore
+├── .compliance-audit.yml
+├── AGENTS.md
 ├── CHANGELOG.md
 ├── CONTRIBUTING.md
 ├── CODE_OF_CONDUCT.md

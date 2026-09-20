@@ -14,7 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-- Raise the published Node.js floor to `>=22.12.0` (was `>=18`) to match the development toolchain: `.nvmrc` pins 22.12.0, the pinned actions run Node 22, and Vitest 5 / Stryker 10 require Node 22. Node 18 and 20 consumers must upgrade; no runtime API changed.
+- Raise the published Node.js floor to `>=22.12.0` (was `>=18`) to match the development toolchain: `.nvmrc` pins 22.12.0, the pinned actions run Node 22, and Vitest 4.1 / Stryker 10 require Node 22. Node 18 and 20 consumers must upgrade; no runtime API changed.
 
 ### Fixed
 
