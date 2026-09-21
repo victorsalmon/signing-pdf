@@ -10,13 +10,15 @@ export { loadPdf } from './load.js';
 export {
   embedFieldValues,
   embedSignatureImage,
-  embedCertificatePage,
   type PdfFieldType,
   type PdfOverlayField,
   type SignatureOverlay,
+} from './overlay.js';
+export {
+  embedCertificatePage,
   type CertificateSignerEntry,
   type CertificatePageData,
-} from './overlay.js';
+} from './certificate.js';
 export { finalizeSignedPdf } from './finalize.js';
 export { sanitizeWinAnsi } from './sanitize.js';
 export { PDFDocument, PDFPage, PDFFont, StandardFonts, rgb } from 'pdf-lib';

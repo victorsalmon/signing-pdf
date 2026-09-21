@@ -555,7 +555,9 @@ signing-pdf/
 ├── src/
 │   ├── index.ts                   # Public exports + pdf-lib re-exports
 │   ├── load.ts                    # loadPdf — load a PDF from bytes
-│   ├── overlay.ts                 # embedFieldValues, embedSignatureImage, embedCertificatePage + types
+│   ├── overlay.ts                 # embedFieldValues, embedSignatureImage + types
+│   ├── certificate.ts             # embedCertificatePage + certificate types
+│   ├── pdf-drawing.ts             # Shared page lookup, color, and Y-flip helpers
 │   ├── finalize.ts                # finalizeSignedPdf — save to bytes
 │   └── sanitize.ts                # sanitizeWinAnsi — WinAnsi encoding sanitization
 ├── test/
@@ -568,7 +570,8 @@ signing-pdf/
 ├── examples/
 │   ├── quickstart.ts              # Minimal overlay + certificate flow
 │   ├── multi-signer.ts            # Two-signer example (client + contractor)
-│   └── multi-signer-offline.ts    # Companion example with distinct geometry
+│   ├── multi-signer-offline.ts    # Companion example with distinct geometry
+│   └── multi-signer-common.ts     # Shared placeholder PNG + two-signer flow
 ├── docs/
 │   ├── coordinates.md             # Normative coordinate formula (top-left origin)
 │   └── coordinates-system.md      # Per-field geometry for multi-signer-offline.ts

@@ -20,7 +20,7 @@ pdfY = pageHeight - topY - elementHeight
 ```
 
 `x` passes through unchanged. The page number is 1-indexed; out-of-range
-pages throw. This is implemented by `topLeftYToPdfLibY` in `src/overlay.ts`:
+pages throw. This is implemented by `topLeftYToPdfLibY` in `src/pdf-drawing.ts`:
 
 - Text fields use `height` (default `14`pt when omitted).
 - Signature images use the overlay's `height`.
